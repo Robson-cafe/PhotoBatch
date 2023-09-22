@@ -72,3 +72,33 @@ void ArgumentParser::Parse(
 }
 
 //-------------------------------------------------------------------------
+
+void ArgumentParser::RegisterOption(
+	const string& option
+)
+{
+	if (!option.empty()) {
+		m_Options[option] = "";
+	}
+}
+
+//-------------------------------------------------------------------------
+
+const string& ArgumentParser::GetOption(
+	const string& option
+) const
+{
+	if (!option.empty()) {
+		auto optionIt = m_Options.find(option);
+
+		if (optionIt != end(m_Options)) {
+			return optionIt->second;
+		}
+	}
+
+	static string emptyOption = "";
+
+	return emptyOption;
+}
+
+//-------------------------------------------------------------------------

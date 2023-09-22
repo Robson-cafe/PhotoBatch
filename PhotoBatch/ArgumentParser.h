@@ -24,8 +24,17 @@ public:
 		char* argv[]
 	);
 
+	void RegisterOption(
+		const string& option
+	);
+
+	const string& GetOption(
+		const string& option
+	) const;
+
 private:
 	map<string, bool> m_Flags;
+	map<string, string> m_Options;
 };
 
 
