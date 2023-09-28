@@ -23,6 +23,7 @@ using namespace std;
 int main(int argc, char* argv[])
 {
 	setlocale(LC_ALL, "pt_BR");
+	setlocale(LC_NUMERIC, "en_US");
 
 	/*for (int i = 0; i < argc; ++i) {
 		std::cout << argv[i] << std::endl;
@@ -44,9 +45,9 @@ int main(int argc, char* argv[])
 	cout << boolalpha << "Convert : " << argParser.GetFlag("convert") << endl;
 	cout << boolalpha << "Resize : " << argParser.GetFlag("resize") << endl;
 	cout << boolalpha << "Scale : " << argParser.GetFlag("scale") << endl;
-	cout << "Folder : " << argParser.GetOption("folder") << endl;
-	cout << "Amount : " << argParser.GetOption("amount") << endl;
-
+	cout << "Folder : " << argParser.GetOptionAs<const string&>("folder") << endl;
+	cout << "Amount (float): " << argParser.GetOptionAs<float>("amount") << endl;
+	cout << "Amount (int): " << argParser.GetOptionAs<int>("amount") << endl;
 
 	return 0;
 }

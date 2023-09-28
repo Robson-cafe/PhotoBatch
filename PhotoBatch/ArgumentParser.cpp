@@ -55,6 +55,21 @@ void ArgumentParser::Parse(
 					//depois do arg.substr: "rename"
 					if (arg.find_first_of('=') != string::npos) {
 						//é uma opção
+						const size_t equalSignPos = arg.find('=');
+
+						if (equalSignPos != string::npos) {
+							//divide opção em chave valor
+							string optionName = arg.substr(0, equalSignPos);
+							string optionValue = arg.substr(equalSignPos + 1);
+
+							auto optionIt = m_Options.find(optionName);
+
+							if (optionIt != end(m_Options)) {
+								//achou uma opção registrada
+								optionIt->second = optionValue;
+							}
+
+						}
 					}
 					else {
 						// é uma flag
@@ -99,6 +114,32 @@ const string& ArgumentParser::GetOption(
 	static string emptyOption = "";
 
 	return emptyOption;
+}
+
+//-------------------------------------------------------------------------
+
+float ArgumentParser::GetOptionAsFloat(
+	const string& option
+) const
+{
+	const string& optionValue = GetOption(option);
+
+	if (!optionValue.empty()) {
+		return stof(optionValue);
+	}
+	return -1;
+}
+
+//-------------------------------------------------------------------------
+
+int ArgumentParser::GetOptionAsInt(const string& option) const
+{
+	const string& optionValue = GetOption(option);
+
+	if (!optionValue.empty()) {
+		return stoi(optionValue);
+	}
+	return -1;
 }
 
 //-------------------------------------------------------------------------
