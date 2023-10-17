@@ -10,3 +10,5 @@ add_executable(
 	"Utils.h" 
 	"Utils.cpp"
 )
+
+set_target_properties(PhotoBatch PROPERTIES CXX_STANDARD 17)
