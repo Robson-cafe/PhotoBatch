@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <array>
 #include <filesystem>
+#include <string>
 
 #include "ArgumentParser.h"
 
@@ -38,7 +39,24 @@ namespace Args
 		static constexpr const char* Width = "width";
 		static constexpr const char* Heigth = "heigth";
 		static constexpr const char* Amount = "amount";
+		static constexpr const char* Prefix = "prefix";
+		static constexpr const char* StartNumber = "startnumber";
+		static constexpr const char* From = "from";
+		static constexpr const char* To = "to";
 	}
+}
+
+const std::string& GetInvalidChars()
+{
+	static const std::basic_string invalidCharacters = "\\/*?\"<>|:";
+	return invalidCharacters;
+}
+
+bool HasInvalidChars(
+	const std::string& str
+)
+{
+	return str.find_first_of(GetInvalidChars()) != std::string::npos;
 }
 
 void ValidateArguments (
@@ -71,11 +89,8 @@ void ValidateArguments (
 
 	//validar se o filtro é uma string valida
 	const std::string filter = argParser.GetOptionAs<const std::string&>(Args::Opts::Filter);
-	if (!filter.empty()) {
-		const std::string invalidCharacters = "\\/*?\"<>|:";
-		if (filter.find_first_of(invalidCharacters) != std::string::npos) {
-			throw std::invalid_argument("O filtro não pode conter os caracteres:" + invalidCharacters);
-		}
+	if (!filter.empty() && HasInvalidChars(filter)) {
+		throw std::invalid_argument("O filtro não pode conter os caracteres:" + GetInvalidChars());
 	}
 
 	//validar o modo resize
@@ -119,6 +134,50 @@ void ValidateArguments (
 			throw std::invalid_argument("Filtro não pode estar em branco no modo Scale");
 		}
 	}
+
+	//validar rename
+	if (bRenameMode) {
+
+		int startNumber = -1;
+
+		try {
+			startNumber = argParser.GetOptionAs<int>(Args::Opts::StartNumber);
+		}
+		catch (const std::invalid_argument&) {
+			throw std::invalid_argument("O valor informado para StartNumber não é um número válido");
+		}
+
+		const std::string prefix = argParser.GetOptionAs<const std::string&>(Args::Opts::Prefix);
+
+		if (startNumber < 0) {
+			throw std::invalid_argument("StartNumber deve ser maior que zero");
+		}
+
+		if (prefix.empty() || HasInvalidChars(prefix)) {
+			throw std::invalid_argument("O Prefixo não pode estar em branco e não pode conter os caractres " + GetInvalidChars());
+		}
+
+		
+		
+	}
+
+	//validar convert
+	if (bConvertMode) {
+		const std::string from = argParser.GetOptionAs<const std::string&>(Args::Opts::From);
+		const std::string to = argParser.GetOptionAs<const std::string&>(Args::Opts::To);
+		const std::array<std::string, 2> optionsConvert = { "jpg", "png" };
+
+		bool fromIsValid = std::find(std::begin(optionsConvert), std::end(optionsConvert), from) != std::end(optionsConvert);
+		bool toIsValid = std::find(std::begin(optionsConvert), std::end(optionsConvert), to) != std::end(optionsConvert);
+
+		if (!fromIsValid || !toIsValid) {
+			throw std::invalid_argument("Extensão válida apenas em jpg e png");
+		}
+
+		if (from == to) {
+			throw std::invalid_argument("Extensão para conversão são iguais");
+		}
+	}
 }
 
 int main(int argc, char* argv[])
@@ -133,15 +192,22 @@ int main(int argc, char* argv[])
 	//getchar();
 
 	ArgumentParser argParser;
+	//registra flags
 	argParser.RegisterFlag(Args::Flags::Rename);
 	argParser.RegisterFlag(Args::Flags::Convert);
 	argParser.RegisterFlag(Args::Flags::Resize);
 	argParser.RegisterFlag(Args::Flags::Scale);
+
+	//registra opções
 	argParser.RegisterOption(Args::Opts::Folder);
 	argParser.RegisterOption(Args::Opts::Filter);
 	argParser.RegisterOption(Args::Opts::Width);
 	argParser.RegisterOption(Args::Opts::Heigth);
 	argParser.RegisterOption(Args::Opts::Amount);
+	argParser.RegisterOption(Args::Opts::Prefix);
+	argParser.RegisterOption(Args::Opts::StartNumber);
+	argParser.RegisterOption(Args::Opts::From);
+	argParser.RegisterOption(Args::Opts::To);
 
 	argParser.Parse(argc, argv);
 
