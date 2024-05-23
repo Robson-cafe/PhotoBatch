@@ -99,6 +99,20 @@ void ArgumentParser::RegisterOption(
 
 //-------------------------------------------------------------------------
 
+void ArgumentParser::SetHelpMessage(const string& message)
+{
+	m_HelpMessage = message;
+}
+
+//-------------------------------------------------------------------------
+
+const string& ArgumentParser::GetHelpMessage()
+{
+	return m_HelpMessage;
+}
+
+//-------------------------------------------------------------------------
+
 const string& ArgumentParser::GetOption(
 	const string& option
 ) const

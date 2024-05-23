@@ -32,6 +32,12 @@ public:
 		const string& option
 	);
 
+	void SetHelpMessage(
+		const string& message
+	);
+
+	const string& GetHelpMessage();
+
 	template<typename T>
 	T GetOptionAs(
 		const string& option
@@ -63,6 +69,7 @@ private:
 
 	map<string, bool> m_Flags;
 	map<string, string> m_Options;
+	string m_HelpMessage;
 };
 
 
