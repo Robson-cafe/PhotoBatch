@@ -9,6 +9,9 @@ add_executable(
 	"ArgumentParser.cpp"
 	"Utils.h" 
 	"Utils.cpp"
+	"UnityTests/TestArgumentParser.cpp"
 )
 
 set_target_properties(PhotoBatch PROPERTIES CXX_STANDARD 17)
+
+add_subdirectory(UnityTests)

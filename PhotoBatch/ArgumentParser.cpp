@@ -10,9 +10,22 @@ void ArgumentParser::RegisterFlag(
 	const string& flag
 )
 {
-	if (!flag.empty()) {
+	if (!flag.empty() && !Utils::HasWhiteSpace(flag)) {
 		m_Flags[flag] = false;
 	}
+}
+
+//-------------------------------------------------------------------------
+
+bool ArgumentParser::IsFlagRegistered(
+	const std::string& flag
+)
+{
+	if (!flag.empty()) {
+		return m_Flags.count(flag) == 1;
+	}
+
+	return false;
 }
 
 //-------------------------------------------------------------------------
@@ -36,10 +49,10 @@ bool ArgumentParser::GetFlag(
 
 void ArgumentParser::Parse(
 	int argc,
-	char* argv[]
+	const char* argv[]
 )
 {
-	if (argc > 1) {
+	if (argc > 1 && argv != nullptr) {
 		for (int i = 1; i < argc; ++i) {
 			//string arg = argv[i];
 			string arg = Utils::ToLower(argv[i]);
@@ -92,9 +105,22 @@ void ArgumentParser::RegisterOption(
 	const string& option
 )
 {
-	if (!option.empty()) {
+	if (!option.empty() && !Utils::HasWhiteSpace(option)) {
 		m_Options[option] = "";
 	}
+}
+
+//-------------------------------------------------------------------------
+
+bool ArgumentParser::IsOptionRegistered(
+	const string& option
+)
+{
+	if (!option.empty()) {
+		return m_Options.count(option) == 1;
+	}
+
+	return false;
 }
 
 //-------------------------------------------------------------------------

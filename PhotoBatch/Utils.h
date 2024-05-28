@@ -11,6 +11,9 @@ namespace Utils
 	string ToLower(
 		string str
 	);
+
+	bool HasWhiteSpace(
+		const string& flag
+	);
 }
 
-//-------------------------------------------------------------------------
