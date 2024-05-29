@@ -178,7 +178,7 @@ void ValidateArguments (
 	}
 }
 
-int main(int argc, char* argv[])
+int main(int argc, const char* argv[])
 {
 	setlocale(LC_ALL, "pt_BR");
 	setlocale(LC_NUMERIC, "en_US");
