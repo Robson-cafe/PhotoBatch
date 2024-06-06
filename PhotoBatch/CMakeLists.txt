@@ -11,7 +11,9 @@ add_executable(
 	"Utils.cpp"
 	"UnityTests/TestArgumentParser.cpp"
 	"Mode.h" 
-	"Mode.cpp")
+	"Mode.cpp" 
+	"RenameMode.h" 
+	"RenameMode.cpp")
 
 set_target_properties(PhotoBatch PROPERTIES CXX_STANDARD 17)
 
