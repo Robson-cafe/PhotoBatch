@@ -13,8 +13,17 @@ add_executable(
 	"Mode.h" 
 	"Mode.cpp" 
 	"RenameMode.h" 
-	"RenameMode.cpp")
+	"RenameMode.cpp" 
+	"ConvertMode.h" 
+	"ConvertMode.cpp")
 
 set_target_properties(PhotoBatch PROPERTIES CXX_STANDARD 17)
 
+set(FETCHCONTENT_QUIET OFF CACHE BOOL "Desabilita o modo quiet to FetchContent" FORCE)
+include(FetchContent)
+
 add_subdirectory(UnityTests)
+
+add_subdirectory(External)
+
+target_link_libraries(PhotoBatch PRIVATE stb)

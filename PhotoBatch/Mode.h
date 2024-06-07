@@ -2,8 +2,12 @@
 
 #include <string>
 #include <memory>
+#include <filesystem>
+#include <vector>
 
 using namespace std;
+
+//----------------------------------------------------------------------------------------------
 
 class Mode
 {
@@ -22,6 +26,10 @@ class Mode
 
 	protected:
 		virtual void RunImp() = 0;
+
+		vector<filesystem::path> GetFiles(
+			const filesystem::path& extension = ""
+		) const;
 
 	private:
 		string m_Filter;

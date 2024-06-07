@@ -6,6 +6,7 @@
 #include <iostream>
 
 #include "ArgumentParser.h"
+#include "ConvertMode.h"
 #include "RenameMode.h"
 
 using namespace std;
@@ -50,6 +51,35 @@ void Mode::Run()
 	chrono::milliseconds elapsedTimeMs = chrono::duration_cast<chrono::milliseconds>(elapsedTime);
 
 	cout << GetModeNome() << "Operação finalizada em " << elapsedTimeMs.count() << " ms" << endl;
+}
+
+//----------------------------------------------------------------------------------------------
+
+vector<filesystem::path> Mode::GetFiles(
+	const filesystem::path& extension
+) const
+{
+	vector<filesystem::path> files;
+	int numSkippeFiles = 0;
+
+	for (const filesystem::directory_entry& entry : filesystem::directory_iterator(GetFolder())) {
+		//verifica se é arquivo válido ou pasta
+		const bool bIsFile = filesystem::is_regular_file(entry.path());
+		const bool bMatchFilter = GetFilter().empty() || (entry.path().string().find(GetFilter()) != string::npos);
+		const bool bMatchExtension = extension.empty() || entry.path().extension() == extension;
+
+		if (bIsFile && bMatchFilter && bMatchExtension) {
+			files.push_back(entry.path());
+		}
+		else {
+			numSkippeFiles++;
+		}
+	}
+
+	cout << GetModeNome() << "Numero de arquivos encontrados: " << files.size() << endl;
+	cout << GetModeNome() << "Numero de arquivos ignorados  : " << numSkippeFiles << endl;
+
+	return files;
 }
 
 //----------------------------------------------------------------------------------------------
@@ -188,6 +218,13 @@ unique_ptr<Mode> CreateMode(
 		if (from == to) {
 			throw invalid_argument("Extensão para conversão são iguais");
 		}
+
+		map<string, ConvertMode::Format> convertOptionsMap = {
+			{ "jpg", ConvertMode::Format::JPG },
+			{ "png", ConvertMode::Format::PNG }
+		};
+
+		return make_unique<ConvertMode>(filter, folder, convertOptionsMap.at(from), convertOptionsMap.at(to));
 	}
 
 	return nullptr;

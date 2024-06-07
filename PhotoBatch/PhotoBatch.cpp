@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <string>
 
+#include <stb_image.h>
 #include "ArgumentParser.h"
 #include "Mode.h"
 
