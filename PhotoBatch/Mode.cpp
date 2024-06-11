@@ -9,6 +9,7 @@
 #include "ConvertMode.h"
 #include "RenameMode.h"
 #include "ResizeMode.h"
+#include "ScaleMode.h"
 
 using namespace std;
 
@@ -178,6 +179,8 @@ unique_ptr<Mode> CreateMode(
 		if (filter.empty()) {
 			throw invalid_argument("Filtro não pode estar em branco no modo Scale");
 		}
+
+		return make_unique<ScaleMode>(filter, folder, amount);
 	}
 
 	//validar rename
